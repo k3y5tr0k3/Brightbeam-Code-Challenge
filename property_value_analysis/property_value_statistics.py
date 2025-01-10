@@ -229,8 +229,8 @@ class PropertyValueStatistics:
                     )
 
                 street_name = property.get("Street Name", "").lower()
-                price = str(property.get("Price", "0"))
-                price = float(price.replace(",", ""))
+                price = property.get("Price", "0")
+                price = float(price.replace(",", "").replace("€", ""))
 
                 if not street_name:
                     raise ValueError(

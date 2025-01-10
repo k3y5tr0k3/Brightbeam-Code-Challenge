@@ -16,13 +16,21 @@ It takes two files as input data ([Dublin Property Values](./data/dublin-propert
 - on a street with short trees
 
 
-## Standalone Usage
+## Usage
 
-Todo
+To execute the application, navigate to the project root directory, and run the following command (there are no external dependencies):
 
-## Usage as Dependency in Another Project
+```bash
+python3 -m property_value_analysis.main
+```
 
-Todo
+Example output:
+
+```
+[2025-01-10 17:37:00,060][INFO][main.py:82] - Average property value on streets with tall trees:587800.39
+[2025-01-10 17:37:00,064][INFO][main.py:91] - Average property value on streets with short trees:488981.66
+```
+
 
 ## Testing Instructions
 
@@ -41,12 +49,20 @@ Todo
 
 - Windows
 
-    TODO
+    - Command Prompt
+        ```
+        venv\Scripts\activate
+        ```
+
+    - Powershell
+        ```
+        .\venv\Scripts\Activate
+        ```
 
 3. Install test dependencies:
 
     ```bash
-    pip install -r test-requirements.txt
+    pip install -r dev-requirements.txt
     ```
 
 4. Run unit tests with PyTest (PyTest is preconfigured via [pyproject.toml](./pyproject.toml))
@@ -63,7 +79,29 @@ Todo
 
 ## Developer Notes
 
-### Notable Conventions
+### Design Notes
+
+#### Loosely-coupled code
+
+This project is designed to be loosely coupled. This is evidenced by its modular design, where each component (e.g., parsers, statistics calculations) has a clear, independent responsibility. It promotes flexibility and extensibility, allowing new features to be added without impacting existing components, and supports easy testing of individual parts.
+
+#### Error Handling
+
+Overall this project employs a fail-fast error-handling approach, ensuring that issues are detected and reported immediately when they occur. This minimizes debugging time and promotes robust, reliable code by addressing problems as early as possible in the application flow. 
+
+When an error is raised, one of two things will happen:
+
+1. The application will stop. For example, when input data is missing or when that data is invalid or corrupted. This is because the application cannot continue with no input data, we should inform the user of the details of this failure and stop the application.
+
+2. Where it is appropriate, the application will skip parts of the data that are invalid/missing, but continue execution of the remaining valid data. The application should also inform the user about the details of the missing or invalid data (in this project's case via a log message). For example, with software that is designed to auto-fill form data, we should fill in as much of that data as possible and inform the user of any form fields that we where unable to fill.
+
+#### Dependencies
+
+This project follows a minimal dependency approach, separating production dependencies from development and testing dependencies. This ensures a lightweight, efficient production environment while maintaining flexibility for development and testing workflows.
+
+#### Testing
+
+This project follows the Arrange, Act, Assert testing methodology to ensure clear and structured test cases. Each test is organized into distinct sections for setup, execution, and verification, making it easy to understand and maintain.
 
 #### Zen of Python
 
@@ -79,42 +117,6 @@ python3 -m this
 
 This project uses Google-style docstrings to ensure consistency and clarity in documentation. The format provides a structured and readable way to describe modules, classes, and functions, enhancing maintainability and ease of understanding for developers.
 
-#### Import Statements
-
-Import statements are grouped and ordered as follows:
-1. Python standard library imports
-2. External library imports
-3. Project code imports
-
-With 1 line of whitespace separating each of these groups.
-
-#### Testing
-
-This project follows the Arrange, Act, Assert testing methodology to ensure clear and structured test cases. Each test is organized into distinct sections for setup, execution, and verification, making it easy to understand and maintain.
-
-#### Dependencies
-
-This project follows a minimal dependency approach, separating production dependencies from development and testing dependencies. This ensures a lightweight, efficient production environment while maintaining flexibility for development and testing workflows.
-
-### Design Notes
-
-#### Loosely-coupled code
-
-This project is designed to be loosely coupled. This is evidenced by its modular design, where each component (e.g., parsers, statistics calculations) has a clear, independent responsibility. It promotes flexibility and extensibility, allowing new features to be added without impacting existing components, and supports easy testing of individual parts.
-
-#### Production Readiness
-TODO
-
-#### Error Handling
-
-Overall this project employs a fail-fast error-handling approach, ensuring that issues are detected and reported immediately when they occur. This minimizes debugging time and promotes robust, reliable code by addressing problems as early as possible in the application flow. 
-
-When an error is raised, one of two things will happen:
-
-1. The application will stop. For example, when input data is missing or when that data is invalid or corrupted. This is because the application cannot continue with no input data, we should inform the user of the details of this failure and stop the application.
-
-2. Where it is appropriate, the application will skip parts of the data that are invalid/missing, but continue execution of the remaining valid data. The application should also inform the user about the details of the missing or invalid data (in this project's case via a log message). For example, with software that is designed to auto-fill form data, we should fill in as much of that data as possible and inform the user of any form fields that we where unable to fill.
-
 #### Key Optimizations
 
 1. Preprocessing the Tree Count Data:
@@ -124,9 +126,9 @@ When an error is raised, one of two things will happen:
 
     ```python
     {
-        "the park": {"short": 10, "tall": 0},
-        "ventry park": {"short": 0, "tall": 0},
-        "cambridge road": {"short": 0, "tall": 20},
+        "the park": {"short": True,},
+        "ventry park": {"tall": True},
+        "cambridge road": {"short": True, "tall": True},
         ...
     }
     ```

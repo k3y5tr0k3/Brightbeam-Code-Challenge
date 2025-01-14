@@ -15,6 +15,14 @@ It takes two files as input data ([Dublin Property Values](./data/dublin-propert
 - on a street with tall trees
 - on a street with short trees
 
+## Challenge Specification
+
+The full details of the challenge and its requirements can be found in [challenge.txt](./challenge.txt)
+
+## Stated Reasons for Rejection
+
+- Test are too complicated (I disagree)
+- Issues with error handling (No further explanation was provided)
 
 ## Usage
 
